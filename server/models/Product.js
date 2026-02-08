@@ -1,41 +1,83 @@
 import mongoose from 'mongoose';
 
+const reviewSchema = new mongoose.Schema({
+    customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: true
+    },
+    comment: {
+        type: String
+    }
+}, { timestamps: true });
+
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        trim: true
     },
+
     description: {
         type: String,
-        required: true,
+        required: true
     },
+
     price: {
         type: Number,
-        required: true,
+        required: true
     },
+
     category: {
         type: String,
-        required: true,
+        required: true
     },
+
     material: {
-        type: String,
+        type: String
     },
+
     image: {
-        type: String, // URL to the image (can be local or cloud)
-        required: true,
+        type: String,
+        required: true
     },
+
     stock: {
         type: Number,
-        default: 0,
+        default: 0
     },
+
     artisan: {
-        type: String, // Name of the artisan/seller
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // artisan user
+        required: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
+
+    status: {
+        type: String,
+        enum: ['active', 'inactive', 'out_of_stock'],
+        default: 'active'
+    },
+
+    ratings: {
+        type: Number,
+        default: 0
+    },
+
+    reviews: [reviewSchema],
+
+    totalSold: {
+        type: Number,
+        default: 0
     }
-});
+
+}, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
 
